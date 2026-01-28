@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Unit Converter</title>
+        <link rel="icon" href="data:,">
+        <script src="https://cdn.tailwindcss.com"></script>
+
+    </head>
+
+    <body class="min-h-screen flex items-center justify-center p-6">
+        <main
+            class="w-full max-w-[520px] min-h-[460px] p-10 border-[2px] border-black"
+        >
+            <h1 class="text-2xl font-extrabold tracking-tight">
+                Unit Converter
+            </h1>
+
+            <div class="mt-8 flex items-center gap-10 text-sm font-extrabold">
+                <a href="index.html" class="relative text-blue-600">
+                    Length
+                    <span
+                        class="absolute -bottom-2 left-0 h-[6px] w-[110%] bg-blue-600"
+                    ></span>
+                </a>
+                <span class="opacity-90">Weight</span>
+                <span class="opacity-90">Temperature</span>
+            </div>
+
+            <!-- Form -->
+            <div class="mt-8 space-y-8">
+                <div class="space-y-1">
+                    <div class="text-base font-extrabold">
+                        Enter the length to convert
+                    </div>
+                    <input
+                        id="value"
+                        type="text"
+                        class="w-full px-2 py-1 text-base font-bold border-[2px] border-gray-900"
+                    />
+                </div>
+
+                <div class="space-y-1">
+                    <div class="text-base font-extrabold">
+                        Unit to Convert from
+                    </div>
+                    <select
+                        id="from_unit"
+                        type="text"
+                        class="w-full px-2 py-1 text-base font-bold border-[2px] border-gray-900"
+                    >
+
+                    </select>
+                </div>
+
+                <div class="space-y-1">
+                    <div class="text-base font-extrabold">
+                        Unit to Convert to
+                    </div>
+                    <select
+                        id="to_unit"
+                        type="text"
+                        class="w-full px-2 py-1 text-base font-bold border-[2px] border-gray-900"
+                    >
+
+                    </select>
+                </div>
+
+                <div class="w-full pt-3">
+                    <button
+                        id="convert_btn"
+                      class="w-full px-2 py-1 text-base font-bold border-[2px] text-white border-gray-900 bg-blue-800"
+                    >
+                        Convert
+                    </a>
+                </div>
+            </div>
+        </main>
+        <script>
+          document.addEventListener("DOMContentLoaded", async () => {
+            const fromSelect = document.getElementById("from_unit");
+            const toSelect = document.getElementById("to_unit");
+
+            try {
+              const type = "length"; // or weight / temperature
+              const res = await fetch(`http://127.0.0.1:9742/units?type=${type}`);
+
+              if (!res.ok) {
+                throw new Error(`HTTP ${res.status}`);
+              }
+
+              const units = await res.json();
+              console.log("Units from API:", units);
+
+              // Clear existing options (safety)
+              fromSelect.innerHTML = "";
+              toSelect.innerHTML = "";
+
+              // Populate both dropdowns
+              units.forEach(unit => {
+                const fromOption = new Option(unit, unit);
+                const toOption = new Option(unit, unit);
+
+                fromSelect.add(fromOption);
+                toSelect.add(toOption);
+              });
+
+            } catch (err) {
+              console.error("Failed to load units:", err);
+            }
+          });
+        </script>
+
+    </body>
+</html>
