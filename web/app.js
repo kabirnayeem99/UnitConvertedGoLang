@@ -32,10 +32,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       toSelect.add(toOption);
     });
 
+    const value = document.getElementById("value");
+
     const convertButton = document.getElementById("convert_btn");
-    convertButton.addEventListener("click", () =>  {
-      const res = await fetch(`${baseUrl}/convert?type=${type}`)
-      
+    convertButton.addEventListener("click", async () => {
+      const res = await fetch(`${baseUrl}/convert?type=${type}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          value: value.value,
+          from: fromSelect.value,
+          to: toSelect.value,
+        }),
+      });
     });
   } catch (err) {
     console.error("Failed to load units:", err);
